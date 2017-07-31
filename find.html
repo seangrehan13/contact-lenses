@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>London Contacts map</title>
+<link href="twoColFixLtHdr.css" rel="stylesheet" type="text/css" />
+  <script src="http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=ABQIAAAAo6hZh32nCaFrx7CdYS0aAxR6EbwWCBWTznu0t9qKiybukgJ98hT6SL8zrX-Lbg2OP1AsBeCJq9G9Pw" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    var map = null;
+    var geocoder = null;
+
+    function initialize() {
+      if (GBrowserIsCompatible()) {
+
+	   var myPano = new GStreetviewPanorama(document.getElementById("pano"));
+        GEvent.addListener(myPano, "error", handleNoFlash);
+
+        map = new GMap2(document.getElementById("map_canvas"));
+         map.setCenter(new GLatLng(51.4788, -0.0107), 13);//co-ordinates and zoom level
+		 
+		 map.setUIToDefault();
+        geocoder = new GClientGeocoder(); //coverting address to co-ordinates
+//overlay and photo view functon
+		 // svOverlay = new GStreetviewOverlay();
+        map.addOverlay(svOverlay);
+        GEvent.addListener(map,"click", function(overlay,latlng) {
+          myPano.setLocationAndPOV(latlng);
+        });
+
+      }
+    }
+//geocoding function
+    function showAddress(address) {
+      if (geocoder) {
+        geocoder.getLatLng(
+          address,
+          function(point) {
+            if (!point) {
+              alert(address + " not found");
+            } else {
+              map.setCenter(point, 13);
+              var marker = new GMarker(point);
+              map.addOverlay(marker);
+              marker.openInfoWindowHtml(address);
+            }
+          }
+        );
+      }
+    }
+
+
+	function handleNoFlash(errorCode) {
+      if (errorCode == FLASH_UNAVAILABLE) {
+        alert("Error: Flash doesn't appear to be supported by your browser");
+        return;
+      }
+    } 
+    </script>
+</head>
+
+  <body onload="initialize()" onunload="GUnload()">
+<div class="container">
+  <div class="header">
+    <!-- end .header --></div>
+  <div class="sidebar1">
+    <ul class="nav">
+      <li><a href="index.html">home</a></li>
+      <li><a href="about.html">about us</a></li>
+      <li><a href="gallery.html">gallery</a></li>
+      <li><a href="contact.html">contact form</a></li>
+       <li><a href="find.html">find us</a></li>
+    </ul>
+ </div>
+  <div class="content">
+    <h1>find us</h1>
+    <p>45 street rd<br />
+    Some where<br />
+    Some town<br />
+    SE10 5TJ
+</p>
+ <div id="map_canvas" style="width: 500px; height: 300px"></div>
+    <h2>&nbsp;</h2>
+<h4>&nbsp;</h4>
+    <!-- end .content --></div>
+  <div class="footer">
+</div>
+  <!-- end .container --></div>
+</body>
+</html>
